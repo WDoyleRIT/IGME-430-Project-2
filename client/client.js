@@ -4,7 +4,7 @@
 */
 const handleError = (message) => {
   document.getElementById('errorMessage').textContent = message;
-  document.getElementById('domoMessage').classList.remove('hidden');
+  document.getElementById('postMessage').classList.remove('hidden');
 };
 
 /* Sends post requests to the server using fetch. Will look for various
@@ -20,7 +20,7 @@ const sendPost = async (url, data) => {
   });
 
   const result = await response.json();
-  document.getElementById('domoMessage').classList.add('hidden');
+  document.getElementById('postMessage').classList.add('hidden');
 
   if(result.redirect) {
     window.location = result.redirect;
@@ -37,8 +37,8 @@ const sendPost = async (url, data) => {
 const init = () => {
   const signupForm = document.getElementById('signupForm');
   const loginForm = document.getElementById('loginForm');
-  const domoForm = document.getElementById('domoForm');
-  const domoMessage = document.getElementById('domoMessage');
+  const postForm = document.getElementById('postForm');
+  const postMessage = document.getElementById('postMessage');
 
   /* If this page has the signupForm, add it's submit event listener.
      Event listener will grab the username, password, and password2
@@ -48,7 +48,7 @@ const init = () => {
   if(signupForm) {
     signupForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      domoMessage.classList.add('hidden');
+      postMessage.classList.add('hidden');
 
       const username = signupForm.querySelector('#user').value;
       const pass = signupForm.querySelector('#pass').value;
@@ -77,7 +77,7 @@ const init = () => {
   if(loginForm) {
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      domoMessage.classList.add('hidden');
+      postMessage.classList.add('hidden');
 
       const username = loginForm.querySelector('#user').value;
       const pass = loginForm.querySelector('#pass').value;
@@ -92,26 +92,25 @@ const init = () => {
     });
   }
 
-  /* If this page has the domoForm, add it's submit event listener.
-     Event listener will grab the domo name and the domo age from
+  /* If this page has the postForm, add it's submit event listener.
+     Event listener will grab the post name and the post age from
      the form. It will throw an error if one or both are missing.
      Otherwise, it will send the request to the server.
   */
-  if(domoForm) {
-    domoForm.addEventListener('submit', (e) => {
+  if(postForm) {
+    postForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      domoMessage.classList.add('hidden');
+      postMessage.classList.add('hidden');
 
-      const name = domoForm.querySelector('#domoName').value;
-      const age = domoForm.querySelector('#domoAge').value;
-      const level = domoForm.querySelector('#domoLevel').value;
+      const title = postForm.querySelector('#postTitle').value;
+      const content = postForm.querySelector('#postContent').value;
 
-      if(!name || !age || !level) {
-        handleError('All fields are required!');
+      if(!content) {
+        handleError('Content field is required!');
         return false;
       }
 
-      sendPost(domoForm.getAttribute('action'), {name, age, level});
+      sendPost(postForm.getAttribute('action'), {title, content});
       return false;
     });
   }
