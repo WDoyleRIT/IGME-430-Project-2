@@ -260,3 +260,8 @@ h3.domoLevel{
 .domo:last-child {
     margin-bottom:10px;
 }
+
+/*New Stuff*/
+.postFace{
+    width: 10em;
+}

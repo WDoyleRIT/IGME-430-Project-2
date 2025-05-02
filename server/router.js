@@ -16,6 +16,9 @@ const router = (app) => {
 
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 
+  app.get('/getAccounts', mid.requiresLogin, controllers.Account.getAccounts);
+  app.post('/buyPremium', controllers.Account.buyPremium);
+
   app.delete('/deletePost', controllers.Post.deletePost);
 };
 

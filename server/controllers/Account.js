@@ -56,9 +56,47 @@ const signup = async (req, res) => {
   }
 };
 
+const getAccounts = async (req, res) => {
+  try {
+    const currentUsername = req.session.account?.username;
+
+    const accounts = await Account.find(
+      { username: { $ne: currentUsername } },
+      'username'
+    );
+    const accountNames = accounts.map(account => account.username); 
+
+    return res.json({ accounts: accountNames });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'An error occurred while fetching account names.' });
+  }
+};
+
+const buyPremium = async (req, res) => {
+  try {
+    const accountId = req.session.account._id;
+
+    if(req.session.account.isPremium == true){
+      return res.json({ message: 'Account is already premium!' });
+    }
+
+    await Account.findByIdAndUpdate(accountId, { isPremium: true });
+
+    req.session.account.isPremium = true;
+
+    return res.json({ message: 'Account upgraded to premium!' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'An error occurred while upgrading to premium.' });
+  }
+};
+
 module.exports = {
   loginPage,
   login,
   logout,
   signup,
+  getAccounts,
+  buyPremium,
 };

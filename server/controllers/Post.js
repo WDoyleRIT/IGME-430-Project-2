@@ -6,6 +6,12 @@ const { Post } = models;
 const makerPage = async (req, res) => res.render('app');
 
 const makePost = async (req, res) => {
+  const isPremium = req.session.account.isPremium;
+
+  if(req.body.title && !isPremium){
+    return res.status(400).json({ error: 'Premium required to add title to post!' });
+  }
+
   if (!req.body.content) {
     return res.status(400).json({ error: 'Cannot create a post with no content!' });
   }

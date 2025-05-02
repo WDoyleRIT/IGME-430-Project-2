@@ -37,7 +37,7 @@ const PostForm = (props) => {
     );
 };
 
-const deletePost = async (PostId, triggerReload) => {
+const deletePost = async (postId, triggerReload) => {
     try {
         const response = await fetch('/deletePost', {
           method: 'DELETE',
@@ -57,7 +57,7 @@ const deletePost = async (PostId, triggerReload) => {
 };
 
 const PostList = (props) => {
-    const [posts, setPost] = useState(props.posts);
+    const [posts, setPosts] = useState(props.posts);
 
     useEffect(() => {
         const loadPostsFromServer = async () => {
@@ -81,7 +81,7 @@ const PostList = (props) => {
             <div key={post.id} className="post">
                 <img src="/assets/img/account.jpg" alt="post face" className="postFace" />
                 <h3 className="PostTitle">{post.title}</h3>
-                <h3 className="PostContent">Age: {post.content}</h3>
+                <h3 className="PostContent">{post.content}</h3>
                 <button onClick={() => deletePost(post._id, props.triggerReload)} className="deleteButton">
                 Delete Post
                 </button>
@@ -96,11 +96,109 @@ const PostList = (props) => {
     );
 };
 
+const UserList = (props) => {
+    const [users, setUsers] = React.useState([]);
+
+    React.useEffect(() => {
+        const getUsers = async () => {
+            try {
+                const response = await fetch('/getAccounts');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user list');
+                }
+                const data = await response.json();
+                setUsers(data.accounts);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        getUsers();
+    }, []);
+
+    const followUser = (index) => {
+        setUsers((prevUsers) => prevUsers.filter((_, i) => i !== index));
+    };
+
+    const userNodes = users.map((user, index) => (
+        <div key={index} className="user">
+            <h3 className="userName">{user}</h3>
+            <button onClick={() => followUser(index)} className="followButton">
+                Follow
+            </button>
+        </div>
+    ));
+
+    return (
+        <div className="userList">
+            {userNodes}
+        </div>
+    );
+};
+
+const PremiumButton = (props) => {
+    const [isPremium, setIsPremium] = React.useState(false);
+
+    const buyPremium = async () => {
+        try {
+            const response = await fetch('/buyPremium', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to upgrade to premium');
+            }
+
+            const data = await response.json();
+            alert(data.message);
+            setIsPremium(true);
+        } catch (error) {
+            console.error(error);
+            alert('An error occurred while upgrading to premium.');
+        }
+    };
+
+    if (isPremium) {
+        return null; 
+    }
+
+    return (
+        <button onClick={buyPremium} className="premiumButton">
+            Buy W Premium Now
+        </button>
+    );
+};
+
+const buyPremium = async () => {
+    try {
+        const response = await fetch('/buyPremium', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to upgrade to premium');
+        }
+
+        const data = await response.json();
+        console.log(data.message);
+        alert('You are now a premium user!');
+    } catch (error) {
+        console.error(error);
+        alert('An error occurred while upgrading to premium.');
+    }
+};
+
 const App = () => {
     const [reloadPosts, setReloadPosts] = useState(false);
 
     const triggerReload = () => {
-        setReloadPosts((prev) => !prev); // Toggle the state to trigger a reload
+        setReloadPosts((prev) => !prev);
     };
 
     return (
@@ -110,6 +208,12 @@ const App = () => {
             </div>
             <div id="posts">
                 <PostList posts={[]} reloadPosts={reloadPosts} triggerReload={triggerReload}/>
+            </div>
+            <div id="users">
+                <UserList triggerReload={() => setReloadPosts(!reloadPosts)} />
+            </div>
+            <div id="premium">
+                <PremiumButton triggerReload={() => setReloadPosts(!reloadPosts)}/>
             </div>
         </div>
     );
