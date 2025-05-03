@@ -1,20 +1,19 @@
 const mongoose = require('mongoose');
-const _ = require('underscore');
 
-//const setName = (name) => _.escape(name).trim();
+// const setName = (name) => _.escape(name).trim();
 
 const PostSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
     trim: true,
-    //set: setName,
+    // set: setName,
   },
   content: {
     type: String,
     required: true,
     trim: true,
-    //set: setName,
+    // set: setName,
   },
   owner: {
     type: mongoose.Schema.ObjectId,

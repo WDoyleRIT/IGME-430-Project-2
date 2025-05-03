@@ -5,9 +5,9 @@ const { Post } = models;
 const makerPage = async (req, res) => res.render('app');
 
 const makePost = async (req, res) => {
-  const isPremium = req.session.account.isPremium;
+  const { isPremium } = req.session.account;
 
-  if(req.body.title && !isPremium){
+  if (req.body.title && !isPremium) {
     return res.status(400).json({ error: 'Premium required to add title to post!' });
   }
 
@@ -25,7 +25,7 @@ const makePost = async (req, res) => {
   try {
     const newPost = new Post(postData);
     await newPost.save();
-    return res.status(201).json({ title: newPost.title, content: newPost.content});
+    return res.status(201).json({ title: newPost.title, content: newPost.content });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: 'An error occured making post!' });

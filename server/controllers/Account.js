@@ -58,13 +58,13 @@ const signup = async (req, res) => {
 
 const getAccounts = async (req, res) => {
   try {
-    const currentUsername = req.session.account?.username;
+    const currentUsername = req.session.account.username;
 
     const accounts = await Account.find(
       { username: { $ne: currentUsername } },
-      'username'
+      'username',
     );
-    const accountNames = accounts.map(account => account.username); 
+    const accountNames = accounts.map((account) => account.username);
 
     return res.json({ accounts: accountNames });
   } catch (err) {
@@ -77,7 +77,7 @@ const buyPremium = async (req, res) => {
   try {
     const accountId = req.session.account._id;
 
-    if(req.session.account.isPremium == true){
+    if (req.session.account.isPremium === true) {
       return res.json({ message: 'Account is already premium!' });
     }
 

@@ -33,7 +33,7 @@ const AccountSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  isPremium:{
+  isPremium: {
     type: Boolean,
     required: true,
     default: false,
