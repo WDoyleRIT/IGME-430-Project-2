@@ -1,6 +1,5 @@
 const models = require('../models');
 
-//const { Domo } = models;
 const { Post } = models;
 
 const makerPage = async (req, res) => res.render('app');
@@ -24,16 +23,6 @@ const makePost = async (req, res) => {
   };
 
   try {
-    /*const existingDomo = await Domo.findOne({
-      name: req.body.name,
-      owner: req.session.account._id,
-    }).exec();
-    if (existingDomo) {
-      existingDomo.level += 1;
-      await existingDomo.save();
-      return res.status(400).json({ error: 'Domo already exists!' });
-    }*/
-
     const newPost = new Post(postData);
     await newPost.save();
     return res.status(201).json({ title: newPost.title, content: newPost.content});

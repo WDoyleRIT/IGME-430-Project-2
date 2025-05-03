@@ -206,11 +206,15 @@ const App = () => {
             <div id="makePost">
                 <PostForm triggerReload={() => setReloadPosts(!reloadPosts)} />
             </div>
-            <div id="posts">
-                <PostList posts={[]} reloadPosts={reloadPosts} triggerReload={triggerReload}/>
-            </div>
-            <div id="users">
-                <UserList triggerReload={() => setReloadPosts(!reloadPosts)} />
+            <div id="mainContent">
+                <div id="posts">
+                    <h2>Your Feed:</h2>
+                    <PostList posts={[]} reloadPosts={reloadPosts} triggerReload={triggerReload}/>
+                </div>
+                <div id="users">
+                    <h2>Who to Follow:</h2>
+                    <UserList triggerReload={() => setReloadPosts(!reloadPosts)} />
+                </div>
             </div>
             <div id="premium">
                 <PremiumButton triggerReload={() => setReloadPosts(!reloadPosts)}/>
